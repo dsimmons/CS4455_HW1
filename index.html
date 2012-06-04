@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Simmons | Car Game</title>
+		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+		<style type="text/css">
+			div.missing {
+				margin: auto;
+				position: relative;
+				top: 50%;
+				width: 193px;
+			}
+			div.missing a {
+				height: 63px;
+				position: relative;
+				top: -31px;
+			}
+			div.missing img {
+				border-width: 0px;
+			}
+			div#unityPlayer {
+				cursor: default;
+				height: 349px;
+				width: 620px;
+				margin: 0 auto;
+				visibility: hidden;
+
+			}
+			.hero-unit { padding: 30px 60px;  }
+			.hero-unit p { font-size: 14px; }
+			.checked { margin-left: 16px; }
+			h2 { line-height: 28px; }
+			body { background: #777; }
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="hero-unit">
+				<div id="unityPlayer">
+					<div class="missing">
+						<a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+							<img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+						</a>
+					</div>
+				</div>
+				<br />
+				<div class="control-group">
+					<h2>Dan Simmons</h2>
+					<h2>CS4455 Homework 1</h2>
+					<h2>Unity Warm-up</h2>
+					<br/>
+					<h4 id="textContainer"></h4>
+					<p><button class="btn btn-large" id="play">Play! <i class="icon-play icon-white"></i></button></p>
+				</div>
+				<hr />
+			</div>
+			<div class="well">
+			<h4>For the grader:</h4>
+			<br />
+			<div class="row">
+				<div class="span5">
+					<h4>Name added to HUD:</h4>
+					<p class="checked"><i class="icon-check"></i> Check top-right corner</p>
+					<h4>Script change:</h4>
+					<p class="checked"><i class="icon-check"></i> Depending on the intensity of a tire skid, play a randomized message above the car (<i>ex: 'Sweet!'</i>) if the skid was drastic enough.  Depends on velocity of the car.</p>
+					<p class="checked"><b>To trigger:</b> preferably just drive around the track as fast as you can.  A quick-and-dirty test is to go fast and then slam on the brakes (SPACE).</p>
+					<h4>3D environment change:</h4>
+					<p class="checked"><i class="icon-check"></i> Changed the texture-mapping of the road to be a dirt road as opposed to the original asphalt.</p>
+				</div>
+				<div  class="span6">
+					<h4>Other miscellaneous changes:</h4>
+					<p class="checked"><i class="icon-check"></i> The sound didn't work at all in the beginning. It turns out that Unity3D 3.5.x breaks it apparently.  After fixing said sounds through the 
+					SoundController, I changed the background track to be a catchier song/beat and adjusted the volume levels in the SoundController to emphasize the music and slightly mute the car noises (which were too loud).</p>
+					<p class="checked"><i class="icon-check"></i> I changed the physics of the car a bit, making it more inclined to whip the tail out to mirror that of a modern-day rear-wheel-drive sports car (think BMW M5). Plus it's
+					more fun to drive :)</p>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject.js"></script>
+		<script type="text/javascript">
+			$(function() {
+					function GetUnity() {
+						if (typeof unityObject != "undefined") {
+							return unityObject.getObjectById("unityPlayer");
+						}
+						return null;
+					}
+					function detectUnity() {
+						if (navigator.appVersion.indexOf("MSIE") != -1 && navigator.appVersion.toLowerCase().indexOf("win") != -1) {
+							return detectUnityWebPlayerActiveX();
+						} else if (navigator.mimeTypes && navigator.mimeTypes['application/vnd.unity']) {
+							return (navigator.mimeTypes['application/vnd.unity'].enabledPlugin && navigator.plugins && navigator.plugins['Unity Player']);
+						}
+					}
+
+					if (typeof unityObject != "undefined") {
+						var _textContainer = $('#textContainer');
+						var x = 0;
+						_textContainer.text('Checking for Unity3D Web Player.');
+						var id = setInterval(function() {
+							_textContainer.text(_textContainer.text() + '.');
+							if (++x >= 5) window.clearInterval(id);
+						}, 400);
+						if (!detectUnity()) {
+                            setTimeout(function() {
+							_textContainer.text('No bueno :(');
+							$('#unityPlayer').css('visibility', 'visible');
+							$('#play').addClass('btn-danger').addClass('disabled');
+                            }, 2500);
+						} else {
+							setTimeout(function() {
+								_textContainer.text('Looks like you\'ve got Unity!  Have at it!');
+								$('#play').addClass('btn-success')
+								.click(function() {
+									unityObject.embedUnity("unityPlayer", "assets/player.unity3d", 620, 349);
+								});
+							}, 2500);
+						}
+					}	
+			});
+		</script>
+		</body>
+	</html>
