@@ -81,6 +81,34 @@
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script type="text/javascript" src="http://webplayer.unity3d.com/download_webplayer-3.x/3.0/uo/UnityObject.js"></script>
+
+		<!-- Sooooo stupid. Internet Explorer compatability hack. -->
+		<script language='VBScript'>
+			function detectUnityWebPlayerActiveX
+			    on error resume next
+			    dim tControl, res, ua, re, matches, major
+			    res = 0
+			    set tControl = CreateObject("UnityWebPlayer.UnityWebPlayer.1")
+			    if IsObject(tControl) then
+				if tControl.GetPluginVersion() = "2.5.0f5" then
+				    ua = Navigator.UserAgent
+				    set re = new RegExp
+				    re.Pattern = "Windows NT (\d+)\."
+				    set matches = re.Execute(ua)
+				    if matches.Count = 1 then
+					major = CInt(matches(0).SubMatches(0))
+					if major < 6 then
+					    res = 1
+					end if
+				    end if
+				else
+				    res = 1
+				end if
+			    end if
+			    detectUnityWebPlayerActiveX = res
+			end function
+		</script>
+		
 		<script type="text/javascript">
 			$(function() {
 					function GetUnity() {
